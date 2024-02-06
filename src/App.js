@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Container } from "@mui/material";
+import {
+  Typography,
+  Container,
+  AppBar,
+  Card,
+  CssBaseline,
+  Grid,
+  Toolbar,
+} from "@mui/material";
+import { PhotoCamera } from "@mui/icons-material";
 
 const App = () => {
-  const [events, setEvents] = useState([]);
   const [connectedClients, setConnectedClients] = useState([]);
 
   useEffect(() => {
-    // Install 'websocket' package using 'npm install websocket'
     const WebSocket = require("websocket").w3cwebsocket;
 
     const ws = new WebSocket("ws://localhost:8080/");
@@ -17,14 +24,13 @@ const App = () => {
 
     ws.onmessage = (event) => {
       const newEvent = event.data;
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      setConnectedClients((prevClients) => [...prevClients, newEvent]);
     };
 
     ws.onclose = () => {
       console.log("Connection closed");
     };
 
-    // Fetch connected clients when the component mounts
     fetchConnectedClients();
 
     return () => {
@@ -37,31 +43,65 @@ const App = () => {
       const response = await fetch("http://localhost:8080/connected-clients");
       const clients = await response.json();
       setConnectedClients(clients);
+      console.log("Connected clients:", clients);
     } catch (error) {
       console.error("Error fetching connected clients:", error);
     }
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Real-Time Events
-      </Typography>
-      <ul>
-        {events.map((event, index) => (
-          <li key={index}>{event}</li>
-        ))}
-      </ul>
+    <>
+      <CssBaseline />
+      <AppBar position="relative">
+        <Toolbar>
+          <PhotoCamera />
+          <Typography variant="h6"> EDR</Typography>
+        </Toolbar>
+      </AppBar>
+      <main>
+        <Container maxWidth="sm">
+          <Typography
+            variant="h2"
+            align="center"
+            color="textPrimary"
+            gutterBottom
+          >
+            EDR
+          </Typography>
+          <Typography
+            variant="h5"
+            align="center"
+            color="textSecondary"
+            paragraph
+          >
+            In this page, you will see the connected clients to the main server.
+          </Typography>
+        </Container>
+        <Container maxWidth="sm">
+          <Grid container spacing={4}>
+            {connectedClients.map((client, index) => {
+              // Split the client string into IP address and port number
+              const [ipAddress, port] = client.split(":");
 
-      <Typography variant="h5" gutterBottom>
-        Connected Clients
-      </Typography>
-      <ul>
-        {connectedClients.map((client, index) => (
-          <li key={index}>{client}</li>
-        ))}
-      </ul>
-    </Container>
+              return (
+                <Grid item key={index}>
+                  <Card>
+                    <Typography gutterBottom variant="h5">
+                      Connected Client
+                    </Typography>
+                    <Typography variant="body1" align="center" paragraph>
+                      IP Address: {ipAddress}
+                      <br />
+                      Port Number: {port}
+                    </Typography>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Container>
+      </main>
+    </>
   );
 };
 
