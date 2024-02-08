@@ -57,6 +57,7 @@ const App = () => {
     } catch (error) {
       console.error("Error fetching connected clients:", error);
     }
+    setInterval(fetchConnectedClients, 5000);
   };
 
   return (
