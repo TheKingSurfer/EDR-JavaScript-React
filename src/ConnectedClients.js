@@ -1,13 +1,9 @@
 // ConnectedClients.js
 import React from "react";
 import { Container, Grid, Card, Typography, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const ConnectedClients = ({ connectedClients }) => {
-  const handleMoreDetails = (client) => {
-    // Handle navigation or displaying more details for the selected client
-    console.log("More details for client:", client);
-  };
-
   return (
     <Container maxWidth="sm">
       <Grid container spacing={4}>
@@ -27,7 +23,8 @@ const ConnectedClients = ({ connectedClients }) => {
                   Port Number: {port}
                 </Typography>
                 <Button
-                  onClick={() => handleMoreDetails(client)}
+                  component={Link}
+                  to={`/client/${ipAddress}/${port}`} // Navigate to client details page
                   variant="contained"
                   color="primary"
                 >

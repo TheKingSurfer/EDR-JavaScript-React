@@ -8,6 +8,7 @@ import ConnectedClients from "./ConnectedClients";
 import HomePage from "./Pages/HomePage";
 import ConnectedClientsPage from "./Pages/ConnectedClientsPage";
 import ServerOfflineMessage from "./ServerOfflineMessage";
+import ClientDetailsPage from "./Pages/ClientDetailsPage";
 
 const App = () => {
   const [connectedClients, setConnectedClients] = useState([]);
@@ -52,6 +53,7 @@ const App = () => {
     try {
       const response = await fetch("http://localhost:8080/connected-clients");
       const clients = await response.json();
+      setIsServerOnline(true);
       setConnectedClients(clients);
       console.log("Connected clients:", clients);
     } catch (error) {
@@ -82,6 +84,8 @@ const App = () => {
             />
           }
         />
+        <Route path="/client/:ip/:port" element={<ClientDetailsPage />} />{" "}
+        {/* Add new route for client details */}
       </Routes>
       {/* {!isServerOnline && <ServerOfflineMessage />}{" "}
       Render error message if server is offline */}
