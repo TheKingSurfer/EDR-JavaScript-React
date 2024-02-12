@@ -27,8 +27,9 @@ const App = () => {
       };
 
       ws.onmessage = (event) => {
-        const newEvent = event.data;
-        setConnectedClients((prevClients) => [...prevClients, newEvent]);
+        const newData = JSON.parse(event.data); // Parse the received JSON data
+        setConnectedClients(newData); // Update connectedClients state with the received data
+        console.log("Connected clients:", newData);
       };
 
       ws.onclose = () => {
@@ -59,7 +60,6 @@ const App = () => {
     } catch (error) {
       console.error("Error fetching connected clients:", error);
     }
-    setInterval(fetchConnectedClients, 5000);
   };
 
   return (
@@ -87,8 +87,8 @@ const App = () => {
         <Route path="/client/:ip/:port" element={<ClientDetailsPage />} />{" "}
         {/* Add new route for client details */}
       </Routes>
-      {/* {!isServerOnline && <ServerOfflineMessage />}{" "}
-      Render error message if server is offline */}
+      {!isServerOnline && <ServerOfflineMessage />}{" "}
+      {/* Render error message if server is offline */}
     </Router>
   );
 };

@@ -8,6 +8,8 @@ const ConnectedClients = ({ connectedClients }) => {
     <Container maxWidth="sm">
       <Grid container spacing={4}>
         {connectedClients.map((client, index) => {
+          console.log(connectedClients);
+
           // Split the client string into IP address and port number
           const [ipAddress, port] = client.split(":");
 
