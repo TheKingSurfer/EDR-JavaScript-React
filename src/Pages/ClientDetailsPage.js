@@ -8,67 +8,60 @@ const ClientDetailsPage = () => {
   const [connPort, setConnPort] = useState(null);
 
   useEffect(() => {
-    const establishWebSocketConnection = async () => {
+    const establishWebSocketConnection = () => {
       try {
         // Fetch the client's IP address
-        const ipResponse = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipResponse.json();
-        setConnIp(ipData.ip);
+        fetch("https://api.ipify.org?format=json")
+          .then((ipResponse) => ipResponse.json())
+          .then((ipData) => setConnIp(ipData.ip))
+          .then(() => {
+            // Connect to WebSocket server
+            const ws = new WebSocket("ws://localhost:8080/client-details-page");
 
-        // Fetch the server's port number from an API
-        const portResponse = await fetch("/api/port");
-        const portData = await portResponse.json();
-        setConnPort(portData.port); // this is where it crashes
+            ws.onopen = () => {
+              console.log("WebSocket connection established.");
+              // Send handshake message to the server
+              const handshakeMessage = JSON.stringify({
+                page: "ClientDetailsPage",
+                connIp: connIp,
+                connPort: connPort, // You can set the port if needed
+                clientIp: ip,
+                clientPort: port,
+              });
+              ws.send(handshakeMessage);
+            };
 
-        // if (connIp && connPort) {
-        // Fetch to establish WebSocket connection
-        const wsInitResponse = await fetch(
-          "http://localhost:8080/client-details-page",
-          {
-            //            method: "POST", // or "GET"
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              page: "ClientDetailsPage",
-              connIp: connIp,
-              connPort: connPort,
-              clientIp: ip,
-              clientPort: port,
-            }),
-          }
-        );
+            ws.onmessage = (event) => {
+              const data = JSON.parse(event.data)[0]; // Access the string element within the array
+              console.log("Received data:", data);
 
-        if (wsInitResponse.ok) {
-          console.log("WebSocket connection established.");
-          console.log(`response succeded ${wsInitResponse}`);
-          const ws = new WebSocket("ws://localhost:8080/client-details-page");
-          ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.page === "ClientDetailsPage") {
-              // Process incoming events only if they're relevant to this page
-              setEvents((prevEvents) => [...prevEvents, data.event]);
-            }
-          };
+              // Split the string into lines
+              const eventDataLines = data.split("\n");
 
-          return () => {
-            // Send handshake message to the server when component unmounts
-            const handshakeMessage = JSON.stringify({
-              page: "MainContent",
-              connIp: connIp,
-              connPort: connPort,
-            });
-            ws.send(handshakeMessage);
-            ws.close();
-          };
-        } else {
-          throw new Error(
-            `Failed to establish WebSocket connection On the ClientDetailsPage. ${Error}`
-          );
-        }
-        //}
+              // Update the events state with the new lines, avoiding duplicates
+              setEvents((prevEvents) => {
+                const newEvents = [...prevEvents];
+                eventDataLines.forEach((line) => {
+                  if (!newEvents.includes(line)) {
+                    newEvents.push(line);
+                  }
+                });
+                return newEvents;
+              });
+
+              console.log("Events:", events); // Note: This might not show the updated state immediately due to closure
+            };
+            ws.onclose = () => {
+              console.log("WebSocket connection closed.");
+            };
+
+            return () => {
+              // Close WebSocket connection when component unmounts
+              ws.close();
+            };
+          });
       } catch (error) {
-        console.error("Error fetching connection info:", error);
+        console.error("Error establishing WebSocket connection:", error);
       }
     };
 
@@ -83,8 +76,8 @@ const ClientDetailsPage = () => {
       <p>IP Address: {ip}</p>
       <p>Port Number: {port}</p>
       <ul>
-        {events.map((event, index) => (
-          <li key={index}>{event}</li>
+        {events.map((line, index) => (
+          <li key={index}>{line}</li>
         ))}
       </ul>
       <Link to="/connected-clients">Back to Connected Clients</Link>
