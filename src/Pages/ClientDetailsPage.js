@@ -19,7 +19,10 @@ const ClientDetailsPage = () => {
             const ws = new WebSocket("ws://localhost:8080/client-details-page");
 
             ws.onopen = () => {
-              console.log("WebSocket connection established.");
+              console.log(
+                "WebSocket connection established to the more details page."
+              );
+              setConnPort(window.location.port);
               // Send handshake message to the server
               const handshakeMessage = JSON.stringify({
                 page: "ClientDetailsPage",
@@ -32,24 +35,33 @@ const ClientDetailsPage = () => {
             };
 
             ws.onmessage = (event) => {
-              const data = JSON.parse(event.data)[0]; // Access the string element within the array
-              console.log("Received data:", data);
+              const dataArray = JSON.parse(event.data); // Parse the entire array
 
-              // Split the string into lines
-              const eventDataLines = data.split("\n");
+              // Iterate over each element in the array
+              dataArray.forEach((data) => {
+                console.log("Received data:", data);
 
-              // Update the events state with the new lines, avoiding duplicates
-              setEvents((prevEvents) => {
-                const newEvents = [...prevEvents];
-                eventDataLines.forEach((line) => {
-                  if (!newEvents.includes(line)) {
-                    newEvents.push(line);
-                  }
-                });
-                return newEvents;
+                // Split the string into lines
+                const eventDataLines = data.split("\n");
+
+                // Update the events state with the new lines
+                setEvents((prevEvents) => [...prevEvents, ...eventDataLines]);
+
+                console.log("Events:", events); // Note: This might not show the updated state immediately due to closure
               });
+              // Update the events state with the new lines, avoiding duplicates
+              // setEvents((prevEvents) => {
+              //   const newEvents = [...prevEvents];
+              //   eventDataLines.forEach((line) => {
+              //     const trimmedLine = line.trim();
+              //     if (trimmedLine && !newEvents.includes(trimmedLine)) {
+              //       newEvents.push(trimmedLine);
+              //     }
+              //   });
+              //   return newEvents;
+              // });
 
-              console.log("Events:", events); // Note: This might not show the updated state immediately due to closure
+              console.log(" all of the current Events:", events); // Note: This might not show the updated state immediately due to closure
             };
             ws.onclose = () => {
               console.log("WebSocket connection closed.");
