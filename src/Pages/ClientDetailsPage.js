@@ -93,6 +93,10 @@ const ClientDetailsPage = () => {
         ))}
       </ul>
       <Link to="/connected-clients">Back to Connected Clients</Link>
+      <div>
+        {" "}
+        <Link to={`/view-processes/${ip}/${port}`}>View Processes</Link>
+      </div>
     </div>
   );
 };

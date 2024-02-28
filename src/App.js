@@ -9,6 +9,7 @@ import HomePage from "./Pages/HomePage";
 import ConnectedClientsPage from "./Pages/ConnectedClientsPage";
 import ServerOfflineMessage from "./ServerOfflineMessage";
 import ClientDetailsPage from "./Pages/ClientDetailsPage";
+import ViewProcessesPage from "./Pages/ViewProcessesPage";
 
 const App = () => {
   const [connectedClients, setConnectedClients] = useState([]);
@@ -85,7 +86,10 @@ const App = () => {
           }
         />
         <Route path="/client/:ip/:port" element={<ClientDetailsPage />} />{" "}
-        {/* Add new route for client details */}
+        <Route
+          path="/view-processes/:ip/:port"
+          element={<ViewProcessesPage />}
+        />
       </Routes>
       {!isServerOnline && <ServerOfflineMessage />}{" "}
       {/* Render error message if server is offline */}
