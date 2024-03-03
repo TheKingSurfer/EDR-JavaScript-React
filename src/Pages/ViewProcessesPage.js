@@ -84,12 +84,12 @@ const ViewProcessesPage = () => {
   // Function to determine row color based on event name
   const getRowColor = (eventName) => {
     switch (eventName) {
-      case "someEventName":
-        return "green"; // Change to the desired color
-      case "anotherEventName":
-        return "blue"; // Change to the desired color
+      case "ProcessStarted":
+        return "green";
+      case "ProcessEnded":
+        return "red";
       default:
-        return "black"; // Default color
+        return "black";
     }
   };
 

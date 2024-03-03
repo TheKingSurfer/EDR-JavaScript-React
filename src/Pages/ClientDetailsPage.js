@@ -27,7 +27,7 @@ const ClientDetailsPage = () => {
               const handshakeMessage = JSON.stringify({
                 page: "ClientDetailsPage",
                 connIp: "62.90.52.113",
-                connPort: 5050, // You can set the port if needed
+                connPort: 5050,
                 clientIp: ip,
                 clientPort: port,
               });
