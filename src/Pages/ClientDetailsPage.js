@@ -26,8 +26,8 @@ const ClientDetailsPage = () => {
               // Send handshake message to the server
               const handshakeMessage = JSON.stringify({
                 page: "ClientDetailsPage",
-                connIp: connIp,
-                connPort: connPort, // You can set the port if needed
+                connIp: "62.90.52.113",
+                connPort: 5050, // You can set the port if needed
                 clientIp: ip,
                 clientPort: port,
               });
@@ -38,14 +38,21 @@ const ClientDetailsPage = () => {
               const dataArray = JSON.parse(event.data); // Parse the entire array
 
               // Iterate over each element in the array
+              const uniqueEvents = new Set(events);
+
+              // Iterate over each element in the array
               dataArray.forEach((data) => {
                 console.log("Received data:", data);
 
-                // Split the string into lines
-                const eventDataLines = data.split("\n");
+                // Create a unique string representation of the event
+                const eventString = JSON.stringify(data);
 
-                // Update the events state with the new lines
-                setEvents((prevEvents) => [...prevEvents, ...eventDataLines]);
+                // Check if the event already exists in the set
+                if (!uniqueEvents.has(eventString)) {
+                  // If it does not exist, add it to the set and update the state
+                  uniqueEvents.add(eventString);
+                  setEvents((prevEvents) => [...prevEvents, data]);
+                }
 
                 console.log("Events:", events); // Note: This might not show the updated state immediately due to closure
               });

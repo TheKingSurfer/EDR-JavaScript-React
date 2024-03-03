@@ -5,6 +5,7 @@ const ViewProcessesPage = () => {
   const { ip, port } = useParams();
   const [connIp, setConnIp] = useState(null);
   const [connPort, setConnPort] = useState(null);
+  const [processes, setProcesses] = useState([]);
 
   useEffect(() => {
     const establishWebSocketConnection = () => {
@@ -25,8 +26,8 @@ const ViewProcessesPage = () => {
               // Send handshake message to the server
               const handshakeMessage = JSON.stringify({
                 page: "ViewProcessesPage",
-                connIp: connIp,
-                connPort: connPort,
+                connIp: "62.90.52.113",
+                connPort: 5050,
                 clientIp: ip,
                 clientPort: port,
               });
@@ -34,8 +35,10 @@ const ViewProcessesPage = () => {
             };
 
             ws.onmessage = (event) => {
-              console.log("Received data:", event.data);
-              // Handle the received data here
+              const receivedData = JSON.parse(event.data);
+              // Assuming receivedData is an array of strings
+              const parsedProcesses = parseData(receivedData);
+              setProcesses(parsedProcesses);
             };
 
             ws.onclose = () => {
@@ -55,10 +58,63 @@ const ViewProcessesPage = () => {
     establishWebSocketConnection();
   }, [connIp, connPort, ip, port]);
 
+  // Function to parse the array of strings into an array of objects
+  const parseData = (data) => {
+    const parsedProcesses = [];
+    for (let i = 0; i < data.length; i += 3) {
+      // Check if each element of the data array is defined before splitting
+      if (data[i] && data[i + 1] && data[i + 2]) {
+        parsedProcesses.push({
+          EventName: data[i].split(": ")[1],
+          ProcessId: data[i + 1].split(": ")[1],
+          ParentProcessId: data[i + 2].split(": ")[1],
+        });
+      } else {
+        console.error(
+          "Invalid data format:",
+          data[i],
+          data[i + 1],
+          data[i + 2]
+        );
+      }
+    }
+    return parsedProcesses;
+  };
+
+  // Function to determine row color based on event name
+  const getRowColor = (eventName) => {
+    switch (eventName) {
+      case "someEventName":
+        return "green"; // Change to the desired color
+      case "anotherEventName":
+        return "blue"; // Change to the desired color
+      default:
+        return "black"; // Default color
+    }
+  };
+
   return (
     <div>
       <h1>View Processes</h1>
       <Link to={`/client/${ip}/${port}`}>Back to Client Details</Link>
+      <table>
+        <thead>
+          <tr>
+            <th>Process ID</th>
+            <th>Parent Process ID</th>
+            <th>Event Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {processes.map((process, index) => (
+            <tr key={index} style={{ color: getRowColor(process.EventName) }}>
+              <td>{process.ProcessId}</td>
+              <td>{process.ParentProcessId}</td>
+              <td>{process.EventName}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
