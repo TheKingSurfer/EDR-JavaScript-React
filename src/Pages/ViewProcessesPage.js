@@ -39,6 +39,9 @@ const ViewProcessesPage = () => {
               // Assuming receivedData is an array of strings
               const parsedProcesses = parseData(receivedData);
               setProcesses(parsedProcesses);
+              console.log(
+                `parsed data: ${parseData}\n received data: ${receivedData}`
+              );
             };
 
             ws.onclose = () => {
@@ -59,16 +62,36 @@ const ViewProcessesPage = () => {
   }, [connIp, connPort, ip, port]);
 
   // Function to parse the array of strings into an array of objects
+  // Function to parse the array of strings into an array of objects
+  // Function to parse the array of strings into an array of objects
+  // Function to parse the array of strings into an array of objects
+  // Function to parse the array of strings into an array of objects
   const parseData = (data) => {
     const parsedProcesses = [];
+    const seenProcessIds = new Set(); // Set to store unique process IDs
     for (let i = 0; i < data.length; i += 3) {
       // Check if each element of the data array is defined before splitting
       if (data[i] && data[i + 1] && data[i + 2]) {
-        parsedProcesses.push({
-          EventName: data[i].split(": ")[1],
-          ProcessId: data[i + 1].split(": ")[1],
-          ParentProcessId: data[i + 2].split(": ")[1],
-        });
+        const processId = data[i + 1].split(": ")[1];
+        const parentProcessId = data[i + 2].split(": ")[1];
+        // Check if processId and parentProcessId are valid numbers
+        if (!isNaN(processId) && !isNaN(parentProcessId)) {
+          // Check if the process ID is not already seen
+          if (!seenProcessIds.has(processId)) {
+            parsedProcesses.push({
+              EventName: data[i].split(": ")[1],
+              ProcessId: processId,
+              ParentProcessId: parentProcessId,
+            });
+            seenProcessIds.add(processId); // Add process ID to the set
+          }
+        } else {
+          console.error(
+            "Invalid process ID format:",
+            processId,
+            parentProcessId
+          );
+        }
       } else {
         console.error(
           "Invalid data format:",
