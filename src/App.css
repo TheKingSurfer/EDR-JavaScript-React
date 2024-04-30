@@ -1,35 +1,33 @@
-
-
-*{
+* {
   margin: 0;
-  padding:0;
+  padding: 0;
   box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.hero{
+.hero {
   height: 100vh;
-  background-image:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.025)),url("./Images/main.jpg") ;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.025)),
+    url("./Images/main.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
 }
 
-.connectedClients{
+.connectedClients {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-image:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.025)),url("./Images/main.jpg") ;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.025)),
+    url("./Images/main.jpg");
   background-size: cover;
   filter: blur(10px);
-  
 }
 
-.connectedClientsContent{
+.connectedClientsContent {
   display: flex;
   flex-direction: column;
   max-width: 700px;
@@ -38,12 +36,18 @@
   align-items: center;
   height: 100%;
 }
-.connectedClientsContent h1{
+.clientDetailsContent {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.connectedClientsContent h1 {
   font-size: 40px;
   font-weight: bolder;
 }
 
-.content{
+.content {
   display: flex;
   flex-direction: column;
   max-width: 700px;
@@ -51,16 +55,15 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-
 }
 
-.content h1{
+.content h1 {
   font-size: 40px;
   font-weight: bolder;
 }
 
-.content p{
-  font-size:18px;
+.content p {
+  font-size: 18px;
   margin: 15px 0;
   max-width: 550px;
   letter-spacing: 2px;
