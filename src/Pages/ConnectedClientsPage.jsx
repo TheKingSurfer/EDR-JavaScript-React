@@ -1,8 +1,8 @@
 // Pages/ConnectedClientsPage.js
 import React from "react";
 import { Link } from "react-router-dom";
-import ConnectedClients from "../ConnectedClients";
-import ServerOfflineMessage from "../ServerOfflineMessage";
+import ConnectedClients from "../Components/ConnectedClients";
+import ServerOfflineMessage from "../Components/ServerOfflineMessage";
 import "../App.css";
 
 const ConnectedClientsPage = ({ connectedClients, isServerOnline }) => {

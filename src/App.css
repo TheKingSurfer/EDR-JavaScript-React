@@ -23,7 +23,7 @@
   z-index: -1;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.025)),
     url("./Images/main.jpg");
-  background-size: cover;
+  background-size: auto;
   filter: blur(10px);
 }
 
@@ -34,7 +34,6 @@
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100%;
 }
 .clientDetailsContent {
   align-items: center;

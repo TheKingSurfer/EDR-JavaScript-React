@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Button, CssBaseline } from "@mui/material";
-import MyAppBar from "./AppBar";// this is the bar
-import MainContent from "./MainContent";
-import ConnectedClients from "./ConnectedClients";
+import MyAppBar from "./AppBar"; // this is the bar
+import MainContent from "./Components/MainContent";
+import ConnectedClients from "./Components/ConnectedClients";
 import HomePage from "./Pages/HomePage";
 import ConnectedClientsPage from "./Pages/ConnectedClientsPage";
-import ServerOfflineMessage from "./ServerOfflineMessage";
+import ServerOfflineMessage from "./Components/ServerOfflineMessage";
 import ClientDetailsPage from "./Pages/ClientDetailsPage";
 import ViewProcessesPage from "./Pages/ViewProcessesPage";
 import styled from "@emotion/styled";
@@ -72,39 +72,36 @@ const App = () => {
       console.error("Error fetching connected clients:", error);
     }
   };
-//style={{backgroundImage: `url(${Image})`, backgroundSize: 'cover',backgroundRepeat: 'no-repeat',height:"100vh"}}
+  //style={{backgroundImage: `url(${Image})`, backgroundSize: 'cover',backgroundRepeat: 'no-repeat',height:"100vh"}}
   return (
-    <section  >
+    <section>
       <Router>
         <CssBaseline />
-          
-          
-          <Routes>
-            <Route
-              path="/"
-              element={<HomePage isServerOnline={isServerOnline} />}
-            />
-            <Route
-              path="/main"
-              element={<MainContent isServerOnline={isServerOnline} />}
-            />
-            <Route
-              path="/connected-clients"
-              element={
-                <ConnectedClientsPage
-                  connectedClients={connectedClients}
-                  isServerOnline={isServerOnline}
-                />
-              }
-            />
-            <Route path="/client/:ip/:port" element={<ClientDetailsPage />} />{" "}
-            <Route
-              path="/view-processes/:ip/:port"
-              element={<ViewProcessesPage />}
-            />
-          </Routes>
-        
 
+        <Routes>
+          <Route
+            path="/"
+            element={<HomePage isServerOnline={isServerOnline} />}
+          />
+          <Route
+            path="/main"
+            element={<MainContent isServerOnline={isServerOnline} />}
+          />
+          <Route
+            path="/connected-clients"
+            element={
+              <ConnectedClientsPage
+                connectedClients={connectedClients}
+                isServerOnline={isServerOnline}
+              />
+            }
+          />
+          <Route path="/client/:ip/:port" element={<ClientDetailsPage />} />{" "}
+          <Route
+            path="/view-processes/:ip/:port"
+            element={<ViewProcessesPage />}
+          />
+        </Routes>
       </Router>
     </section>
   );

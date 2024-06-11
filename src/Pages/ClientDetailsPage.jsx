@@ -54,15 +54,17 @@ const ClientDetailsPage = () => {
 
                 // Create a unique string representation of the event
                 const eventString = JSON.stringify(data);
+                if (eventString.includes("ExecutableHashCode")) {
+                  if (!uniqueEvents.has(eventString)) {
+                    // If it does not exist, add it to the set and update the state
+                    uniqueEvents.add(eventString);
+                    setEvents((prevEvents) => [...prevEvents, data]);
+                  }
 
-                // Check if the event already exists in the set
-                if (!uniqueEvents.has(eventString)) {
-                  // If it does not exist, add it to the set and update the state
-                  uniqueEvents.add(eventString);
-                  setEvents((prevEvents) => [...prevEvents, data]);
+                  console.log("Events:", events); // Note: This might not show the updated state immediately due to closure
                 }
 
-                console.log("Events:", events); // Note: This might not show the updated state immediately due to closure
+                // Check if the event already exists in the set
               });
               // Update the events state with the new lines, avoiding duplicates
               // setEvents((prevEvents) => {
